@@ -1,3 +1,7 @@
+# Complex String Manipulation with Loops
+#Question: Given a string of mixed data containing symbols and prices like "AAPL100GOOG200MSFT300",
+#  write a script to extract and print each symbol with its corresponding price on separate lines.
+
 name = input("enter string")
 symbol = ""
 price = ""
