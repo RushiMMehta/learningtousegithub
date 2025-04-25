@@ -1,0 +1,17 @@
+# Given a long string of security transaction details formatted as "Buy100AAPLSell200GOOG",
+# where each segment starts with a transaction type followed by the amount and the ticker, 
+# print each transaction detail on a new line.
+import re
+
+# Example input
+s = "Buy100AAPLSell200GOOGBuy50TSLA"
+
+# Regular expression to match each transaction
+pattern = r'(Buy|Sell)(\d+)([A-Z]+)'
+
+# Find all matches
+transactions = re.findall(pattern, s)
+
+# Print each transaction on a new line
+for action, amount, ticker in transactions:
+    print(f"{action}{amount}{ticker}")       
