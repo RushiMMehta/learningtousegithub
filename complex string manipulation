@@ -1,0 +1,17 @@
+name = input("enter string")
+symbol = ""
+price = ""
+result = []
+for char in name:
+    if char.isalpha():
+        if price:
+            result.append((symbol,price))
+            symbol = ""
+            price = ""
+        symbol +=char
+    elif char.isdigit():
+        price +=char
+if symbol and price:
+    result.append((symbol,price))
+for sym, prc in result:
+    print(f"{sym}: {prc}")        
