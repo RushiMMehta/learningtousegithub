@@ -1,0 +1,73 @@
+data = [
+    ("2021-01-01", 100),
+    ("2021-01-02", 102),
+    ("2021-01-03", 104),
+    ("2021-01-04", 101),
+    ("2021-01-05", 105),
+    ("2021-01-06", 107),
+    ("2021-01-07", 110),
+    ("2021-01-08", 108),
+    ("2021-01-09", 106),
+    ("2021-01-10", 104),
+    ("2021-01-11", 103),
+    ("2021-01-12", 102),
+    ("2021-01-13", 101),
+    ("2021-01-14", 105),
+    ("2021-01-15", 108),
+    ("2021-01-16", 110),
+    ("2021-01-17", 112),
+    ("2021-01-18", 115),
+    ("2021-01-19", 117),
+    ("2021-01-20", 120),
+]
+
+# Extracting the prices from the data
+prices = [prc for _, prc in data]
+
+# Function to calculate the moving averages
+def moving_average(prclist, dur):
+    ma_list = []
+    for i in range(len(prclist) - dur + 1):
+        avg = sum(prclist[i:i + dur]) / dur
+        ma_list.append(avg)
+    return ma_list
+
+# Calculate the short-term (5-day) and long-term (10-day) moving averages
+sma_list = moving_average(prices, 5)
+lma_list = moving_average(prices, 14)
+
+# Initialize capital, position, and value tracking
+capital = 10000  # Starting capital
+pos = 0  # No stock initially
+value = [capital]  # Initialize with starting capital
+
+# Determine the number of trading days based on the shorter MA list
+num_trading_days = min(len(sma_list), len(lma_list))
+
+# Loop through moving averages and simulate trading
+for i in range(1, num_trading_days):
+    # The trading decision at index 'i' of the moving averages
+    # corresponds to the price at index 'i + 4' in the original 'prices' list.
+    trade_price_index = i + 2
+    if trade_price_index < len(prices):
+        current_price = prices[trade_price_index]
+
+        # Buy signal: short-term MA crosses above long-term MA
+        if sma_list[i] > lma_list[i] and sma_list[i - 1] <= lma_list[i - 1]:
+            pos += 1  # Buy one stock
+            capital -= current_price  # Subtract the price of the stock bought
+
+        # Sell signal: short-term MA crosses below long-term MA
+        elif sma_list[i] < lma_list[i] and sma_list[i - 1] >= lma_list[i - 1]:
+            if pos > 0:  # Ensure we have stock to sell
+                pos -= 1  # Sell one stock
+                capital += current_price  # Add the price of the stock sold
+
+        # Track the portfolio value at the end of the day
+        value.append(capital + pos * current_price)
+
+# Output the final portfolio value
+if value:
+    print(f"Final Portfolio Value: ${value[-1]:.2f}")
+else:
+    print("No trading occurred.")
